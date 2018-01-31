@@ -114,3 +114,50 @@
    )
   )
 
+(defun conj (expr)
+  (and
+   (not (null expr))
+   (listp expr)
+   (eq 'and (first expr))
+   (every wff (rest expr))
+   )
+  )
+
+(defun disj (expr)
+  (and
+   (not (null expr))
+   (listp expr)
+   (eq 'or (first expr))
+   (every wff (rest expr))
+   )
+  )
+
+(defun impl (expr)
+  (and
+   (not (null expr))
+   (= 3 (length expr))
+   (eq 'implies (first expr))
+   (every wff (rest expr))
+   )
+  )
+
+(defun univ (expr)
+  (and
+   (not (null expr))
+   (= 3 (length expr))
+   (eq 'every (first expr))
+   (variablep (first (rest expr)))
+   (wff (rest (rest expr)))
+   )
+  )
+
+(defun exist (expr)
+  (and
+   (not (null expr))
+   (= 3 (length expr))
+   (eq 'exist (first expr))
+   (variablep (second expr))
+   (wff (third expr))
+   )
+  )
+
