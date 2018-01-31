@@ -161,3 +161,11 @@
    )
   )
 
+(defun id (expr)
+  (and
+   (not (null expr))
+   (not (variablep expr))
+   (not (operator expr))
+   )
+  )
+
