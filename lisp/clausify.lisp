@@ -76,3 +76,41 @@
    (id expr)
    )
   )
+
+(defun funct (expr)
+  (and
+   (not (null expr))
+   (listp expr)
+   (id (first expr))
+   (term (rest expr))
+   )
+  )
+
+(defun wff (expr)
+  (or
+   (pred expr)
+   (neg expr)
+   (conj expr)
+   (disj expr)
+   (impl expr)
+   (univ expr)
+   (exist expr)
+   )
+  )
+
+(defun pred (expr)
+  (or
+   (id expr)
+   (funct expr)
+   )
+  )
+
+(defun neg (expr)
+  (and
+   (listp expr)
+   (= 2 (length expr))
+   (eq 'not' (first expr))
+   (wff (rest expr))
+   )
+  )
+
