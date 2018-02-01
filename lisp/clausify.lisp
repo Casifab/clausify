@@ -119,7 +119,7 @@
    (not (null expr))
    (listp expr)
    (eq 'and (first expr))
-   (every wff (rest expr))
+   (every 'wff (rest expr))
    )
   )
 
@@ -128,7 +128,7 @@
    (not (null expr))
    (listp expr)
    (eq 'or (first expr))
-   (every wff (rest expr))
+   (every 'wff (rest expr))
    )
   )
 
@@ -137,7 +137,7 @@
    (not (null expr))
    (= 3 (length expr))
    (eq 'implies (first expr))
-   (every wff (rest expr))
+   (every 'wff (rest expr))
    )
   )
 
@@ -146,8 +146,8 @@
    (not (null expr))
    (= 3 (length expr))
    (eq 'every (first expr))
-   (variablep (first (rest expr)))
-   (wff (rest (rest expr)))
+   (variablep (second expr))
+   (wff (third expr))
    )
   )
 
@@ -166,6 +166,18 @@
    (not (null expr))
    (not (variablep expr))
    (not (operator expr))
+   (symbolp expr)
+   )
+  )
+
+(defun operator (expr)
+  (or
+   (eq 'not expr)
+   (eq 'and expr)
+   (eq 'or expr)
+   (eq 'implies expr)
+   (eq 'exist expr)
+   (eq 'every expr)
    )
   )
 
