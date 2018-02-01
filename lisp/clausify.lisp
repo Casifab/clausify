@@ -72,8 +72,9 @@
 
 (defun const (expr)
   (or
-   (number expr)
+   (numberp expr)
    (id expr)
+   (null expr)
    )
   )
 
@@ -82,7 +83,7 @@
    (not (null expr))
    (listp expr)
    (id (first expr))
-   (term (rest expr))
+   (every 'term (rest expr))
    )
   )
 
@@ -109,8 +110,8 @@
   (and
    (listp expr)
    (= 2 (length expr))
-   (eq 'not' (first expr))
-   (wff (rest expr))
+   (eq 'not (first expr))
+   (wff (second expr))
    )
   )
 
@@ -134,16 +135,16 @@
 
 (defun impl (expr)
   (and
-   (not (null expr))
    (= 3 (length expr))
    (eq 'implies (first expr))
-   (every 'wff (rest expr))
+   (wff (second expr))
+   (wff (third expr))
    )
   )
 
 (defun univ (expr)
   (and
-   (not (null expr))
+   (listp expr)
    (= 3 (length expr))
    (eq 'every (first expr))
    (variablep (second expr))
@@ -153,7 +154,7 @@
 
 (defun exist (expr)
   (and
-   (not (null expr))
+   (listp expr)
    (= 3 (length expr))
    (eq 'exist (first expr))
    (variablep (second expr))
@@ -163,7 +164,6 @@
 
 (defun id (expr)
   (and
-   (not (null expr))
    (not (variablep expr))
    (not (operator expr))
    (symbolp expr)
