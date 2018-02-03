@@ -1,4 +1,5 @@
-;; funzioni fornite all'interno delle specifiche
+;; =============================================================================
+;;FUNZIONI FORNITE ALL'INTERNO DELLE SPECIFICHE
 
 (defun variablep (v)
   (and
@@ -14,7 +15,7 @@
   (apply #'skolem-function* args))
 
 ;;==============================================================================
-;; funzioni principali
+					;FUNZIONI PRINCIPALI
 
 (defun as-cnf (expr)
   (if (wff expr)
@@ -27,11 +28,41 @@
   ;;...
   )
 
+;;==============================================================================
+				       ;ALGORITMO DI TRADUZIONE
+
+;; algoritmo di traduzione
+(defun trad-alg (expr)
+  (rm-or
+   (un-semplification
+    (skolemization
+     (rd-negation
+      (rm-implication expr)
+      )
+     )
+    )
+   )
+  )
+
 ;; rimozione regole di implicazione
 ;; passaggio 1 dell'algoritmo
 
-(defun rm-implication (fbf)
-  ;;...
+(defun rm-implication (expr)
+  (cond
+   ((impl expr) (list 'or (list 'not
+				(rm-implication (second expr)))
+		      (rm-implication (third expr))
+		      )
+    )
+  ((or (exist expr) (univ expr))
+    (list
+     (first expr)
+     (second expr)
+     (rm-implication (third expr))
+     )
+    )
+   (T expr)
+   )
   )
 
 ;; riduzione delle negazioni
@@ -64,8 +95,6 @@
 
 ;;==============================================================================
 					;REGOLE
-;;==============================================================================
-
 (defun term (expr)
   (or
    (const expr)
@@ -139,6 +168,7 @@
 
 (defun impl (expr)
   (and
+   (listp expr)
    (= 3 (length expr))
    (eq 'implies (first expr))
    (wff (second expr))
