@@ -61,8 +61,15 @@
      (rm-implication (third expr))
      )
     )
-   (T expr)
+  ((or (conj expr) (disj expr))
+   (list
+    (first expr)
+    (rm-implication (second expr))
+    (rm-implication (third expr))
+    )
    )
+  (T expr)
+  )
   )
 
 ;; riduzione delle negazioni
