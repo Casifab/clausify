@@ -75,10 +75,48 @@
 ;; riduzione delle negazioni
 ;; passaggio 2 dell'algoritmo
 
-(defun rd-negation (fbf)
-  ;;...
+(defun rd-negation (expr)
+  (cond
+   ((neg expr)
+    (cond
+     ((neg (second expr))
+      (rd-negation (second (second expr)))
+      )
+     ((conj (second expr))
+      (list 'or
+	    (list 'not (rd-negation (second (second expr))))
+	    (list 'not (rd-negation (third (second expr))))
+	    )
+      )
+     ((disj (second expr))
+      (list 'and
+	    (list 'not (rd-negation (second (second expr))))
+	    (list 'not (rd-negation (third (second expr))))
+	    )
+      )
+     ((univ (second expr))
+      (list 'exist
+	    (second (second expr))
+	    (rd-negation (list 'not
+			       (third (second expr)))
+			 )
+	    )
+      )
+     ((exist (second expr))
+      (list 'every
+	    (second (second expr))
+	    (rd-negation (list 'not
+			       (third (second expr)))
+			 )
+	    )
+      )
+     (T expr)
+     )
+    )
+   (T expr)
+   )
   )
-
+   
 ;; skolemizzazione
 ;; passaggio 3 dell'algoritmo
 
