@@ -178,7 +178,7 @@
   )
 
 ;; semplificazione degli universali
-;;passaggio 4 dell'algoritmo
+;; passaggio 4 dell'algoritmo
 
 (defun un-semplification (expr)
   (cond
@@ -208,8 +208,25 @@
 ;; distribuzione dell'or
 ;; passaggio 5 dell'algoritmo
 
-(defun rm-or (fbf)
-  ;;...
+(defun rm-or (expr)
+  (cond
+   ((and
+     (disj expr)
+     (conj (third expr))
+     )
+    (list 'and
+	  (list 'or
+		
+		(second expr)
+		(second (third expr))
+		)
+	  (list 'or
+		(second expr)
+		(third (third expr))
+		)
+	  )
+    )
+   )
   )
 
 ;;==============================================================================
