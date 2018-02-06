@@ -19,7 +19,7 @@
 
 (defun as-cnf (fbf)
   (if (wff fbf)
-      (write-cnf (trad-alg fbf))
+      (trad-alg fbf)
     "Not a wff"
     )
   )
@@ -148,7 +148,10 @@
 ;; passaggio 3 dell'algoritmo
 
 (defun skolemization (expr &optional (mem nil))
-  (cond ((null expr) nil)
+  (cond ((null expr) nil
+	 )
+	((const expr) expr
+	 )
 	((listp (first expr))
 	 (cons
 	  (skolemization (first expr) mem)
@@ -163,7 +166,7 @@
 			      )
 	       )
 	 )
-	 ((eq 'exist (first expr))
+	((eq 'exist (first expr))
 	 (subst (if mem
 		    (skolem-function mem)
 		  (skolem-variable))
@@ -216,7 +219,6 @@
      )
     (list 'and
 	  (list 'or
-		
 		(second expr)
 		(second (third expr))
 		)
@@ -226,6 +228,22 @@
 		)
 	  )
     )
+   ((and
+     (disj expr)
+     (conj (second expr))
+     )
+    (list 'and
+	  (list 'or
+		(second (second expr))
+		(third expr)
+		)
+	  (list 'or
+		(third (second expr))
+		(third expr)
+		)
+	  )
+    )
+   (T expr)
    )
   )
 
