@@ -32,6 +32,7 @@
 				       ;ALGORITMO DI TRADUZIONE
 
 ;; algoritmo di traduzione
+
 (defun trad-alg (expr)
   (rm-or
    (un-semplification
@@ -146,8 +147,26 @@
 ;; skolemizzazione
 ;; passaggio 3 dell'algoritmo
 
-(defun skolemization (fbf)
-  ;;...
+(defun skolemization (expr &optional (mem nil))
+  (cond ((null expr) nil)
+	((listp (first expr))
+	 (cons
+	  (skolemization (first expr) mem)
+	  (skolemization (rest expr) mem)
+	  )
+	 )
+	((eq 'every (first expr))
+	 (list 'every
+	       (second expr)
+	       (skolemization (third expr)
+			      (cons (second expr) mem)
+			      )
+	       )
+	 )
+	(T (cons (first expr) (skolemization (rest expr) mem)
+		 )
+	   )
+	)
   )
 
 ;; semplificazione degli universali
