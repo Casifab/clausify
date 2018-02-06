@@ -17,9 +17,9 @@
 ;;==============================================================================
 					;FUNZIONI PRINCIPALI
 
-(defun as-cnf (expr)
-  (if (wff expr)
-      (write-cnf (trad-alg expr))
+(defun as-cnf (fbf)
+  (if (wff fbf)
+      (write-cnf (trad-alg fbf))
     "Not a wff"
     )
   )
@@ -180,8 +180,29 @@
 ;; semplificazione degli universali
 ;;passaggio 4 dell'algoritmo
 
-(defun un-semplification (fbf)
-  ;;...
+(defun un-semplification (expr)
+  (cond
+   ((univ expr)
+    (third expr)
+    )
+   ((or
+     (conj expr)
+     (disj expr)
+     )
+    (list
+     (first expr)
+     (un-semplification (second expr))
+     (un-semplification (third expr))
+     )
+    )
+   ((neg expr)
+    (list
+     (first expr)
+     (un-semplification (second expr))
+     )
+    )
+   (T expr)
+   )
   )
 
 ;; distribuzione dell'or
