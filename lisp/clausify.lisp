@@ -34,11 +34,13 @@
 ;; algoritmo di traduzione
 
 (defun trad-alg (expr)
-  (rm-or
-   (un-semplification
-    (skolemization
-     (rd-negation
-      (rm-implication expr)
+  (or-n-ary
+   (rm-or
+    (un-semplification
+     (skolemization
+      (rd-negation
+       (rm-implication expr)
+       )
       )
      )
     )
@@ -90,16 +92,20 @@
       (rd-negation (second (second expr)))
       )
      ((conj (second expr))
-      (list 'or
-	    (list 'not (rd-negation (second (second expr))))
-	    (list 'not (rd-negation (third (second expr))))
-	    )
+      (rd-negation 
+       (list 'or
+	     (list 'not (rd-negation (second (second expr))))
+	     (list 'not (rd-negation (third (second expr))))
+	     )
+       )
       )
      ((disj (second expr))
-      (list 'and
-	    (list 'not (rd-negation (second (second expr))))
-	    (list 'not (rd-negation (third (second expr))))
-	    )
+      (rd-negation
+       (list 'and
+	     (list 'not (rd-negation (second (second expr))))
+	     (list 'not (rd-negation (third (second expr))))
+	     )
+       )
       )
      ((univ (second expr))
       (list 'exist
@@ -242,6 +248,37 @@
 		(third expr)
 		)
 	  )
+    )
+   ((neg expr)
+    (list
+     (first expr)
+     (rm-or (second expr))
+     )
+    )
+   (T expr)
+   )
+  )
+
+(defun or-n-ary (expr)
+  (cond
+   ((disj expr)
+    (list*
+     (first expr)
+     (mapcar
+      (lambda (elem)
+	(cond
+	 ((disj elem)
+	  (list
+	   (or-n-ary (second elem))
+	   (or-n-ary (third elem))
+	   )
+	  )
+	 (T elem)
+	 )
+	)
+      (rest expr)
+      )
+     )
     )
    (T expr)
    )
