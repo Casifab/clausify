@@ -25,7 +25,12 @@
   )
 
 (defun is-horn (fbf)
-  ;;...
+  (if (wff fbf)
+      (control-horn
+       (trad-alg fbf)
+       )
+    "Not a wff"
+    )
   )
 
 ;;==============================================================================
@@ -281,6 +286,30 @@
      )
     )
    (T expr)
+   )
+  )
+
+;;==============================================================================
+					;FORMULE PER LA VERIFICA DI HORN
+(defun control-horn (expr)
+  (cond
+   ((< (count-positive expr) 2) T)
+   (T NIL)
+   )
+  )
+
+(defun count-positive (expr)
+  (cond
+   ((or
+     (disj expr)
+     (conj expr)
+     )
+    (apply '+
+	   (mapcar #'count-positive (rest expr))
+	   )
+    )
+   ((neg expr) 0)
+   (T 1)
    )
   )
 
