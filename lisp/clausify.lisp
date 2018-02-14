@@ -34,13 +34,13 @@
   )
 
 ;;==============================================================================
-				       ;ALGORITMO DI TRADUZIONE
+					;ALGORITMO DI TRADUZIONE
 
 ;; algoritmo di traduzione
 
 (defun trad-alg (expr)
-  (or-n-ary
-   (rm-or
+  (and-or-group
+   (distr-or
     (un-semplification
      (skolemization
       (rd-negation
@@ -62,28 +62,28 @@
 		      (rm-implication (third expr))
 		      )
     )
-  ((or (exist expr) (univ expr))
+   ((or (exist expr) (univ expr))
     (list
      (first expr)
      (second expr)
      (rm-implication (third expr))
      )
     )
-  ((or (conj expr) (disj expr))
-   (list
-    (first expr)
-    (rm-implication (second expr))
-    (rm-implication (third expr))
+   ((or (conj expr) (disj expr))
+    (list
+     (first expr)
+     (rm-implication (second expr))
+     (rm-implication (third expr))
+     )
     )
-   )
-  ((neg expr)
-   (list
-    (first expr)
-    (rm-implication (second expr))
+   ((neg expr)
+    (list
+     (first expr)
+     (rm-implication (second expr))
+     )
     )
+   (T expr)
    )
-  (T expr)
-  )
   )
 
 ;; riduzione delle negazioni
@@ -154,7 +154,7 @@
    (T expr)
    )
   )
-   
+
 ;; skolemizzazione
 ;; passaggio 3 dell'algoritmo
 
@@ -222,7 +222,7 @@
 ;; distribuzione dell'or
 ;; passaggio 5 dell'algoritmo
 
-(defun rm-or (expr)
+(defun distr-or (expr)
   (cond
    ((and
      (disj expr)
@@ -257,36 +257,69 @@
    ((neg expr)
     (list
      (first expr)
-     (rm-or (second expr))
+     (distr-or (second expr))
      )
     )
    (T expr)
    )
   )
 
-(defun or-n-ary (expr)
+;; Trasformazione degli or e degli and da binari a n-ari
+
+(defun and-or-group (expr)
   (cond
+   ((conj expr)
+    (and-n-ary expr)
+    )
    ((disj expr)
-    (list*
-     (first expr)
-     (mapcar
-      (lambda (elem)
-	(cond
-	 ((disj elem)
-	  (list
-	   (or-n-ary (second elem))
-	   (or-n-ary (third elem))
-	   )
-	  )
-	 (T elem)
-	 )
-	)
-      (rest expr)
-      )
+    (or-n-ary expr)
+    )
+   ((neg expr)
+    (list
+     'not
+     (and-or-group (second expr))
      )
     )
    (T expr)
    )
+  )
+
+(defun and-n-ary (expr)
+  (let (
+	(arg1 (and-or-group (second expr)))
+	(arg2 (and-or-group (third expr)))
+	)
+    (append
+     (list 'and)
+     (if (conj arg1)
+	 (rest arg1)
+       (list arg1)
+       )
+     (if (conj arg2)
+	 (rest arg2)
+       (list arg2)
+       )
+     )
+    )
+  )
+
+(defun or-n-ary (expr)
+  (let (
+	(arg1 (and-or-group (second expr)))
+	(arg2 (and-or-group (third expr)))
+	)
+    (append
+     (list 'or)
+     (if (disj arg1)
+	 (rest arg1)
+       (list arg1)
+       )
+     (if (disj arg2)
+	 (rest arg2)
+       (list arg2)
+       )
+     )
+    )
   )
 
 ;;==============================================================================
