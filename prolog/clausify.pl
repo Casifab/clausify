@@ -1,5 +1,5 @@
-%%%% 808865 Alessandro Guidi
 %%%% 807398 Fabio Casiraghi
+%%%% 808865 Alessandro Guidi
 %%%% 807592 Mattia Amico
 
 as_cnf(FBF, CNFFBF):-

@@ -199,7 +199,7 @@
 (defun un-semplification (expr)
   (cond
    ((univ expr)
-    (third expr)
+    (un-semplification (third expr))
     )
    ((or
      (conj expr)
