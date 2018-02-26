@@ -10,9 +10,7 @@ variable = _symbol beginning with the character #\?_
 
 function = '(' _id_  _term_+ ')'
 
-wff = _predicate_ </br>
-	| _negation_ | _conj_ | _disj_ | _implication_ </br>
-	| _universal_ | _existential_ </br>
+wff = _predicate_ | _negation_ | _conj_ | _disj_ | _implication_ | _universal_ | _existential_
 	
 predicate = _id_ | '(' _id_ _term_+ ')'
 
