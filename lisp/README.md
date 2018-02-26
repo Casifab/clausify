@@ -2,33 +2,33 @@
 
 Convention for the representation of the WFFs:
 
-term ::= <constant> | <variable> | <function>
+term = <constant> \| <variable> \| <function>
 
-constant ::= <number> | <id>
+constant = <number> \| <id>
 
-variable ::= <symbol beginning with the character #\?>
+variable = <symbol beginning with the character #\?>
 
-function ::= '(' <id>  <term>+ ')'
+function = '(' <id>  <term>+ ')'
 
-wff ::= <predicate> </br>
-	| <negation> | <conj> | <disj> | <implication> </br>
-	| <universal> | <existential> </br>
+wff = <predicate> </br>
+	\| <negation> \| <conj> \| <disj> \| <implication> </br>
+	\| <universal> \| <existential> </br>
 	
-predicate ::= <id> | '(' <id> <term>+ ')'
+predicate = <id> \| '(' <id> <term>+ ')'
 
-negation ::= '(' not <wff> ')'
+negation = '(' not <wff> ')'
 
-conj ::= '(' and <wff> <wff> ')'
+conj = '(' and <wff> <wff> ')'
 
-disj ::= '(' or <wff> <wff> ')'
+disj = '(' or <wff> <wff> ')'
 
-implication ::= '(' implies <wff> <wff> ')'
+implication = '(' implies <wff> <wff> ')'
 
-universal ::= '(' every <variable> <wff> ')'
+universal = '(' every <variable> <wff> ')'
 
-existential ::= '(' exist <variable> <wff> ')'
+existential = '(' exist <variable> <wff> ')'
 
-id ::= <symbol beginning with a letter>
+id = <symbol beginning with a letter>
 
 The two most important functions to use are **as-cnf** and **is-horn**:
 
@@ -39,25 +39,25 @@ The two most important functions to use are **as-cnf** and **is-horn**:
 
 The trad-alg function, called by both as-cnf and is-horn, applies the following steps:
 
-1. Remove implications using rule:
-   (implies p q) = (or (not p) q)
+1. Remove implications using rule: </br>
+   * (implies p q) = (or (not p) q)
 
 2. Reduce all negations to negative literals only such as (not <predicate>) using rules: </br>
-   (not (not p)) = p </br>
-   (not (and p q)) = (or (not p) (not q)) </br>
-   (not (or p q)) = (and (not p) (not q)) </br>
-   (not (every ?x (p ?x))) = (exist ?x (not (p ?x))) </br>
-   (not (exist ?x (p ?x))) = (every ?x (not (p ?x))) </br>
+   * (not (not p)) = p </br>
+   * (not (and p q)) = (or (not p) (not q)) </br>
+   * (not (or p q)) = (and (not p) (not q)) </br>
+   * (not (every ?x (p ?x))) = (exist ?x (not (p ?x))) </br>
+   * (not (exist ?x (p ?x))) = (every ?x (not (p ?x))) </br>
 
 3. “Skolemize” existential variables using rules: </br>
-   (exist ?x (p ?x)) = (p sk00042) </br>
-   (every ?y (exist ?x (p ?x ?y))) = (every ?y (p (sf666 ?y) ?y)) </br>
+   * (exist ?x (p ?x)) = (p sk00042) </br>
+   * (every ?y (exist ?x (p ?x ?y))) = (every ?y (p (sf666 ?y) ?y)) </br>
 	
 4. Simplify the universal by removing the quantifier and the variable.
 	
 5. Distribute the or until we get a conjunction of disjunctions and/or positive and/or negative literals.
 	
-##### Examples:
+### Examples:
 
 **(as-cnf ’p)** </br>
 P
