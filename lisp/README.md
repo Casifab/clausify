@@ -29,33 +29,33 @@ The two most important functions to use are **as-cnf** and **is-horn**:
 
 The trad-alg function, called by both as-cnf and is-horn, applies the following steps:
 
-	1. Remove implications using rule:
-	   (implies p q) = (or (not p) q)
+1. Remove implications using rule:
+(implies p q) = (or (not p) q)
+
+2. Reduce all negations to negative literals only such as (not <predicate>) using rules:
+(not (not p)) = p
+(not (and p q)) = (or (not p) (not q))
+(not (or p q)) = (and (not p) (not q))
+(not (every ?x (p ?x))) = (exist ?x (not (p ?x)))
+(not (exist ?x (p ?x))) = (every ?x (not (p ?x)))
+
+3. “Skolemize” existential variables using rules:
+(exist ?x (p ?x)) = (p sk00042)
+(every ?y (exist ?x (p ?x ?y))) = (every ?y (p (sf666 ?y) ?y))
 	
-	2. Reduce all negations to negative literals only such as (not <predicate>) using rules:
-	   (not (not p)) = p
-	   (not (and p q)) = (or (not p) (not q))
-	   (not (or p q)) = (and (not p) (not q))
-	   (not (every ?x (p ?x))) = (exist ?x (not (p ?x)))
-	   (not (exist ?x (p ?x))) = (every ?x (not (p ?x)))
+4. Simplify the universal by removing the quantifier and the variable.
 	
-	3. “Skolemize” existential variables using rules:
-	   (exist ?x (p ?x)) = (p sk00042)
-	   (every ?y (exist ?x (p ?x ?y))) = (every ?y (p (sf666 ?y) ?y))
-	   
-	4. Simplify the universal by removing the quantifier and the variable.
-	
-	5. Distribute the or until we get a conjunction of disjunctions and/or positive and/or negative literals.
+5. Distribute the or until we get a conjunction of disjunctions and/or positive and/or negative literals.
 	
 ##### Examples:
 
 CL-USER> **(as-cnf ’p)**
 P
 
-CL-USER> **(as-cnf ’(implies (not (bar 42)) qwe))**
+CL-USER> **(as-cnf ’(implies (not (bar 42)) qwe))** </br>
 (OR (BAR 42) QWE)
 
-CL-USER> **(as-cnf ’(and (or p q) (not r)))**
+CL-USER> **(as-cnf ’(and (or p q) (not r)))** </br>
 (AND (OR P Q) (NOT R)))
 
 CL-USER> **(as-cnf ’(and (implies p q) (or w (or f (foo 42)))))**
