@@ -2,33 +2,33 @@
 
 Convention for the representation of the WFFs:
 
-term = <constant> \| <variable> \| <function>
+term = _constant_ | _variable_ | _function_
 
-constant = <number> \| <id>
+constant = _number_ | _id_
 
-variable = <symbol beginning with the character #\?>
+variable = _symbol beginning with the character #\?_
 
-function = '(' <id>  <term>+ ')'
+function = '(' _id_  _term_+ ')'
 
-wff = <predicate> </br>
-	\| <negation> \| <conj> \| <disj> \| <implication> </br>
-	\| <universal> \| <existential> </br>
+wff = _predicate_ </br>
+	| _negation_ | _conj_ | _disj_ | _implication_ </br>
+	| _universal_ | _existential_ </br>
 	
-predicate = <id> \| '(' <id> <term>+ ')'
+predicate = _id_ | '(' _id_ _term_+ ')'
 
-negation = '(' not <wff> ')'
+negation = '(' not _wff_ ')'
 
-conj = '(' and <wff> <wff> ')'
+conj = '(' and _wff_ _wff_ ')'
 
-disj = '(' or <wff> <wff> ')'
+disj = '(' or _wff_ _wff_ ')'
 
-implication = '(' implies <wff> <wff> ')'
+implication = '(' implies _wff_ _wff_ ')'
 
-universal = '(' every <variable> <wff> ')'
+universal = '(' every _variable_ _wff_ ')'
 
-existential = '(' exist <variable> <wff> ')'
+existential = '(' exist _variable_ _wff_ ')'
 
-id = <symbol beginning with a letter>
+id = _symbol beginning with a letter_
 
 The two most important functions to use are **as-cnf** and **is-horn**:
 
