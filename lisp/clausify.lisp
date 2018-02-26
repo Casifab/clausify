@@ -1,4 +1,6 @@
 ;;;; 807398 Casiraghi Fabio
+;;;; 808865 Guidi Alessandro
+;;;; 807592 Amico Mattia
 
 ;; =============================================================================
 ;;FUNZIONI FORNITE ALL'INTERNO DELLE SPECIFICHE
@@ -254,6 +256,12 @@
 		(third (second expr))
 		(third expr)
 		)
+	  )
+    )
+   ((conj expr)
+    (list 'and
+	  (distr-or (second expr))
+	  (distr-or (third expr))
 	  )
     )
    ((neg expr)

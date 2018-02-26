@@ -1,6 +1,7 @@
-%%%% 807398 Fabio Casiraghi
-%%%% 808865 Alessandro Guidi
-%%%% 807592 Mattia Amico
+%%%% -*- Mode: Prolog -*-
+%%%% 807398 Casiraghi Fabio
+%%%% 808865 Guidi Alessandro
+%%%% 807592 Amico Mattia
 
 as_cnf(FBF, CNFFBF):-
     atom(FBF),
@@ -15,7 +16,7 @@ as_cnf(FBF, CNFFBF):-
     semplification(NEE, [], CNF),
     CNFFBF =.. CNF,!.
 
-%una clausola di Horn è una disgiunzione di letterali in cui 
+%una clausola di Horn è una disgiunzione di letterali in cui
 %al massimo uno dei letterali è positivo.
 is_horn(FBF):-
     as_cnf(FBF, CNF),
@@ -102,7 +103,7 @@ rule_implications([X|FBF], Support, F):-
     parse_p(P, P1),
     parse_q(Q, Q1),
     parse_impl([P1], [Q1], F),!.
-    
+
 rule_implications([X|FBF], Support, F):-
     atom(X),
     append(Support, [X], S1),
@@ -126,19 +127,19 @@ prendi_p_q([X|FBF], X, FBF).
 parse_p(P, F):-
     P =.. P1,
     rule_implications(P1, [], P2),
-    P3 =.. P2,    
+    P3 =.. P2,
     append([not], [P3], F1),
     F =.. F1.
 
 parse_q(Q, F):-
     Q =.. Q1,
     rule_implications(Q1, [], F1),
-    F =.. F1.    
+    F =.. F1.
 
 parse_impl(P, Q, F):-
     append(P, Q, Impl),
     append([or], Impl, F).
-    
+
 %rules not (1-5)
 rules_not([], F, F).
 
@@ -169,7 +170,7 @@ rules_not([X|FBF], Support, F):-
     prendi_p_q(FBF, P, Q),
     parse_NOT_OR(P, Q, F1),
     rules_not(F1, [], F),!.
-%rules not_exist    
+%rules not_exist
 rules_not([X|FBF], Support, F):-
     X == exist,
     Support == [not],
@@ -293,17 +294,17 @@ check_predicate(FBF):-
     compound(FBF),
     FBF =.. [WFF|_FBF1],
     WFF \= '[|]',
-    check_predicate(WFF),!. 
+    check_predicate(WFF),!.
 
 check_wff(X):-
     atom(X),
     member(X,[and,not,or,every,exist]).
-        
+
 primo_elemento([F|_FBF],F).
 
-%parsa i paramentri nella regola not-and    
+%parsa i paramentri nella regola not-and
 parse_NOT_AND(P, Q, F):-
-    parse_pro(P, P1),    
+    parse_pro(P, P1),
     parse_pro(Q, Q1),
     append([not], P1, P2),
     P3 =.. P2,
@@ -313,7 +314,7 @@ parse_NOT_AND(P, Q, F):-
     append([or], F1, F).
 %parsa i parametri nella regola not-or
 parse_NOT_OR(P, Q, F):-
-    parse_pro(P, P1),    
+    parse_pro(P, P1),
     parse_pro(Q, Q1),
     append([not], P1, P2),
     P3 =.. P2,
@@ -333,8 +334,8 @@ parse_NOT_EVERY(P, Q, F):-
     var(P),
     parse_pro(Q, Q1),
     append([P], Q1, F1),
-    append([exist], F1, F),!.    
-    
+    append([exist], F1, F),!.
+
 parse_pro(F, [F]):-
     atom(F),
     check_predicate([F]),!.
@@ -372,7 +373,7 @@ rules_or_and([X|FBF], Support, F):-
     WFF =.. WFF1,
     check_and(WFF1),
     rules_or_and(WFF1, [], WFF2),
-    parse_OR_AND(WFF2, X, F),!.   
+    parse_OR_AND(WFF2, X, F),!.
 
 rules_or_and([X|FBF], Support, F):-
     compound(X),
@@ -390,7 +391,7 @@ rules_or_and([X|FBF], Support, F):-
     rules_or_and(X1, [], X2),
     F1 =.. X2,
     append(Support, [F1], F2),
-    rules_or_and(FBF, F2, F),!.      
+    rules_or_and(FBF, F2, F),!.
 
 rules_or_and([X|FBF], Support, F):-
     atom(X),
@@ -401,8 +402,8 @@ rules_or_and([X|FBF], Support, F):-
 rules_or_and([X|FBF], Support, F):-
     var(X),
     append(Support, [X], S1),
-    rules_or_and(FBF, S1, F),!.    
-    
+    rules_or_and(FBF, S1, F),!.
+
 check_and(FBF):-
     primo_elemento(FBF, First),
     First == and.
@@ -435,7 +436,7 @@ parse_OR_AND([X|WFF], Pred, F):-
     Part2 =.. Q3,
     append([and], [Part1], F1),
     append(F1, [Part2], F).
-    
+
 %rules every and exist (8-9)
 rules_quantified1(FBF, F):-
     term_variables(FBF, Vars),
@@ -452,7 +453,7 @@ rules_quantified([X|FBF], Support, [P1|Vars], F):-
     skolem_variable(P, P1),
     rules_quantified(Q, [], Vars, F),
     !.
-%parsare exist_2 
+%parsare exist_2
 rules_quantified([X|FBF], Support, [P1|Vars], F):-
     X == exist,
     Support \= [],
@@ -510,7 +511,8 @@ rules_quantified([X|FBF], Support, Vars, F):-
     rules_quantified(FBF, S1, Vars, F),
     !.
 
-%entra solo se X e' diverso da every o exist,dato che accetta le condizioni sopra
+%entra solo se X e' diverso da every o exist,
+%dato che accetta le condizioni sopra
 rules_quantified([X|FBF], Support, Vars, F):-
     atom(X),
     check_wff(X),
@@ -572,7 +574,7 @@ remove_every([], F, F):-!.
 
 remove_every([X|FBF], Support, F):-
     X == every,
-    Support == [], 
+    Support == [],
     prendi_p_q(FBF, P, Q),
     var(P),
     remove_every(Q, [], F),!.
@@ -595,7 +597,7 @@ remove_every([X|FBF], Support, F):-
     var(X),
     append(Support, [X], S1),
     remove_every(FBF, S1, F),!.
-   
+
 remove_every([X|FBF], Support, F):-
     compound(X),
     Support \= [],
@@ -615,7 +617,7 @@ remove_every([X|FBF], Support, F):-
 %semplification conj\disj
 semplification([], F, F):-!.
 
-%quando sono Atom e Comp 
+%quando sono Atom e Comp
 semplification([X|FBF], Support, F):-
     member(X,[and,or]),
     prendi_p_q(FBF, P, Q),
@@ -639,7 +641,7 @@ semplification([X|FBF], Support, F):-
     append(Support, F1, F),!.
 %quando sono Comp e comp
 semplification([X|FBF], Support, F):-
-    member(X,[and,or]),    
+    member(X,[and,or]),
     prendi_p_q(FBF, P, Q),
     compound(P),
     compound(Q),
@@ -681,7 +683,7 @@ semplification([X|FBF], Support, [F]):-
     semplification(X1, [], X2),
     X3 =.. X2,
     semplification(FBF, X3, F),!.
-    
+
 semplification_1(C, X, F):-
     primo_elemento(C, C1),
     C1 =.. C2,
@@ -692,7 +694,7 @@ semplification_1(C, X, F):-
     semplification([P], [], P1),
     semplification(Q, [], Q2),
     append(P1, Q2, F),!.
-    
+
 semplification_1(C, X, [F]):-
     primo_elemento(C, C1),
     C1 =.. C2,
@@ -700,8 +702,8 @@ semplification_1(C, X, [F]):-
     X \= First,
     semplification(C2, [], F1),
     F =.. F1,!.
-%controlla che sia una lettera    
+%controlla che sia una lettera
 check_not_number(N):-
     name(N, [F|_N1]),
     F >= 97,
-    F =< 122. 
+    F =< 122.
