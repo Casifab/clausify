@@ -2,31 +2,31 @@
 
 Convention for the representation of the WFFs:
 
-term = _constant_ | _variable_ | _function_
+**term** = _constant_ | _variable_ | _function_
 
-constant = _number_ | _id_
+**constant** = _number_ | _id_
 
-variable = _symbol beginning with the character #\?_
+**variable** = _symbol beginning with the character #\?_
 
-function = '(' _id_  _term_+ ')'
+**function** = '(' _id_  _term_+ ')'
 
-wff = _predicate_ | _negation_ | _conj_ | _disj_ | _implication_ | _universal_ | _existential_
+**wff** = _predicate_ | _negation_ | _conj_ | _disj_ | _implication_ | _universal_ | _existential_
 	
-predicate = _id_ | '(' _id_ _term_+ ')'
+**predicate** = _id_ | '(' _id_ _term_+ ')'
 
-negation = '(' not _wff_ ')'
+**negation** = '(' not _wff_ ')'
 
-conj = '(' and _wff_ _wff_ ')'
+**conj** = '(' and _wff_ _wff_ ')'
 
-disj = '(' or _wff_ _wff_ ')'
+**disj** = '(' or _wff_ _wff_ ')'
 
-implication = '(' implies _wff_ _wff_ ')'
+**implication** = '(' implies _wff_ _wff_ ')'
 
-universal = '(' every _variable_ _wff_ ')'
+**universal** = '(' every _variable_ _wff_ ')'
 
-existential = '(' exist _variable_ _wff_ ')'
+**existential** = '(' exist _variable_ _wff_ ')'
 
-id = _symbol beginning with a letter_
+**id** = _symbol beginning with a letter_
 
 The two most important functions to use are **as-cnf** and **is-horn**:
 
