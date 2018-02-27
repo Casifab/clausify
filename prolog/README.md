@@ -28,9 +28,9 @@ Convention for the representation of the WFFs:
 
 **id** = _Prolog non numeric atom_
 
-The two most important functions to use are **as-cnf** and **is-horn**:
+The two most important predicates to use are **as_cnf/2** and **is_horn/1**:
 
-* **as_cn/2** takes as argument a WFF and rewrite it into his CNF form
+* **as_cnf/2** takes as argument a WFF and a variable and rewrite the WFF into his CNF form
 * **is_horn/1** takes as argument a WFF and verify if his CNF's conversion is a conjunction of Horn clauses
 
 ## Algorithm
