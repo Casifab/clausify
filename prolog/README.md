@@ -61,18 +61,18 @@ The trad-alg function, called by both as-cnf and is-horn, applies the following 
 Q = p.
 
 **as_cnf(exist(X, every(Y, foo(Y, X))), F).** </br>
-X = skv6,
+X = skv6, </br>
 F = foo(Y, skv6).
 
 **as_cnf(every(X, exist(Y, foo(Y, X))), F).** </br>
-Y = skf7(X),
+Y = skf7(X), </br>
 F = foo(skf7(X), X).
 
 **as_cnf(implies(and(p, q), r), R).** </br>
 R = or(not(p), not(q), r).
 
 **as_cnf(exist(X, or(p(X), implies(q(X), zut))), R).** </br>
-X = skv8,
+X = skv8, </br>
 R = or(p(skv8), not(q(skv8)), zut).
 
 **is_horn(implies(p, or(q, w))).** </br>
